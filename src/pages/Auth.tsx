@@ -37,7 +37,12 @@ const Auth = () => {
       toast.error("Please enter a valid 6-digit OTP");
       return;
     }
-   
+
+     const { data, error } = await api.post<{ access_token: string; role: string }>("/auth/verify-otp", { phone: phoneNumber, otp });
+    if (error || !data) {
+      toast.error(error || "Invalid OTP");
+      return;
+    }
     api.setToken(data.access_token);
     localStorage.setItem("userRole", data.role);
     toast.success("Login successful!");
